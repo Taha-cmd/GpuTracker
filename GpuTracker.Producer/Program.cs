@@ -14,7 +14,7 @@ for (int i = 10; i < 100; i++)
     var message = new Message<string, string>()
     {
         Key = "key-test" + i,
-        Value = "leitner-k8s-mastre" + i
+        Value = "leitner" + i
     };
 
     producer.Produce("Gpus", message, report =>
