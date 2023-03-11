@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "chr.avro.cli": {
+      "version": "9.4.1",
+      "commands": [
+        "dotnet-avro"
+      ]
+    }
+  }
+}

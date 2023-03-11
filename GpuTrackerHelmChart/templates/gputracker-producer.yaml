@@ -20,6 +20,8 @@ spec:
               env:
                 - name: BOOTSTRAP_SERVERS
                   value: {{.Release.Name}}-kafka:9092
+                - name: SCHEMA_REGISTRY_URL
+                  value: http://kafka-schema-registry:8081
            
 
             

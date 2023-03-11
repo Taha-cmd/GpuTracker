@@ -23,11 +23,15 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
             - containerPort: 8081
+            # config value tranformation system: https://docs.confluent.io/platform/current/installation/docker/config-reference.html#docker-configuration-parameters-for-cp
+            # configuration options: https://docs.confluent.io/platform/current/schema-registry/installation/config.html#schema-canonicalize-on-consume
         env:
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
               value: {{.Release.Name}}-kafka:9092
             - name: SCHEMA_REGISTRY_HOST_NAME
               value: {{$name}}
+            - name: SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL # https://docs.confluent.io/platform/current/schema-registry/installation/config.html#schema-compatibility-level
+              value: full
 ---
 apiVersion: v1
 kind: Service
