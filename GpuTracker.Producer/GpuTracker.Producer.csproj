@@ -9,7 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="Chr.Avro.Confluent" Version="9.4.1" />
     <PackageReference Include="Confluent.Kafka" Version="2.0.2" />
+    <PackageReference Include="Confluent.SchemaRegistry" Version="2.0.2" />
   </ItemGroup>
 
 </Project>

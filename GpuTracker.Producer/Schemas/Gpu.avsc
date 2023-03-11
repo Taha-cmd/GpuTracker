@@ -1,0 +1,27 @@
+{
+    "name": "GpuTracker.Producer.Models.Gpu",
+    "type": "record",
+    "fields": [
+        {
+            "name": "Name",
+            "type": "string"
+        },
+        {
+            "name": "Price",
+            "type": "double"
+        },
+        {
+            "name": "Url",
+            "type": "string"
+        },
+        {
+            "name": "Vendor",
+            "type": "string"
+        },
+        {
+            "name": "Wattage",
+            "default": "",
+            "type": "string"
+        }
+    ]
+}
