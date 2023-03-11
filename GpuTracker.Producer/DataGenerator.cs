@@ -1,0 +1,17 @@
+﻿using Bogus;
+using GpuTracker.Producer.Models;
+
+namespace GpuTracker.Producer;
+internal class DataGenerator
+{
+    internal static IReadOnlyCollection<Gpu> GetGpus()
+    {
+        var faker = new Faker<Gpu>().RuleFor(gpu => gpu.Name, faker => faker.PickRandom("Rtx 3060", "Rtx 3070", "Rtx 3080"))
+            .RuleFor(gpu => gpu.Vendor, faker => faker.PickRandom("Media Markt", "Amazon"))
+            .RuleFor(gpu => gpu.Price, faker => faker.Random.Double(500, 2000))
+            .RuleFor(gpu => gpu.Url, (faker, gpu) => $"https://{gpu.Vendor.Replace(" ", "")}.com/{gpu.Name}");
+
+        return faker.GenerateBetween(50, 100);
+    }
+}
+

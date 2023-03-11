@@ -1,0 +1,25 @@
+{{$name := "gpu-tracker-producer"}}
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{$name}}
+spec:
+  schedule: "* * * * *" # every minute
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: {{$name}}
+              image: se22m001/gputracker-producer
+              imagePullPolicy: Always
+              env:
+                - name: BOOTSTRAP_SERVERS
+                  value: {{.Release.Name}}-kafka:9092
+           
+
+            
