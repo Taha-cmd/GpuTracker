@@ -10,8 +10,8 @@ namespace GpuTracker.Producer.Models
         public string Vendor { get; set; }
 
 
-        // https://github.com/ch-robinson/dotnet-avro/tree/main/examples/Chr.Avro.DefaultValuesExample/Models
-        [DefaultValue("")] // for v2 schema
-        public string Wattage { get; set; }
+        // // https://github.com/ch-robinson/dotnet-avro/tree/main/examples/Chr.Avro.DefaultValuesExample/Models
+        // [DefaultValue("")] // for v2 schema
+        // public string Wattage { get; set; }
     }
 }
