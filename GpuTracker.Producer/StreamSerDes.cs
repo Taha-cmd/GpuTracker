@@ -16,10 +16,11 @@ namespace GpuTracker.Producer
     {
         private readonly IAsyncDeserializer<T> deserializer;
         private readonly IAsyncSerializer<T> serializer;
-        public StreamSerDes(ISchemaRegistryClient schemaRegistryClient)
+        
+        public StreamSerDes(IEnumerable<KeyValuePair<string, string>> schemaRegistryConfig)
         {
-            this.deserializer = new AsyncSchemaRegistryDeserializer<T>(schemaRegistryClient);
-            this.serializer = new AsyncSchemaRegistrySerializer<T>(schemaRegistryClient, AutomaticRegistrationBehavior.Always);
+            this.deserializer = new AsyncSchemaRegistryDeserializer<T>(schemaRegistryConfig);
+            this.serializer = new AsyncSchemaRegistrySerializer<T>(schemaRegistryConfig, AutomaticRegistrationBehavior.Always);
         }
         public T Deserialize(byte[] data, SerializationContext context)
         {
