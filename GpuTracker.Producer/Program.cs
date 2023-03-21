@@ -12,17 +12,18 @@ using Streamiz.Kafka.Net.Crosscutting;
 using Streamiz.Kafka.Net.SerDes;
 using Streamiz.Kafka.Net.State;
 using Streamiz.Kafka.Net.Table;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace GpuTracker.Producer
 {
     public class Program
     {
+        const string TOPIC_NAME = "Gpus";
+        const string TOPIC_AGGREGATED_PRICES = "gpu-average-price";
+
         public static async Task Main()
         {
-            const string TOPIC_NAME = "Gpus";
-            const string TOPIC_AGGREGATED_PRICES = "gpu-average-price";
-
             string schemaRegistryUrl = Environment.GetEnvironmentVariable("SCHEMA_REGISTRY_URL");
             Console.WriteLine("connecting schema registry: " + schemaRegistryUrl);
             var schemaRegistryConfig = new SchemaRegistryConfig()
@@ -36,7 +37,7 @@ namespace GpuTracker.Producer
             var config = new ProducerConfig()
             {
                 BootstrapServers = bootstrapServers,
-                AllowAutoCreateTopics = true
+                AllowAutoCreateTopics = true,
             };
 
             using var producer = new ProducerBuilder<string, Gpu>(config)
@@ -86,46 +87,54 @@ namespace GpuTracker.Producer
             var topology = streamBuilder.Build();
             var streams = new KafkaStream(topology, streamConfig);
             await streams.StartAsync();
-        }
-    }
 
-    // for testing serdes
-    public class Implementation<T> : ISerDes<T>
-    {
-        public T Deserialize(byte[] data, SerializationContext context)
-        {
-            string s = Encoding.UTF8.GetString(data);
-            return default(T);
+            ConsumeAveragePrice();
         }
 
-        public object DeserializeObject(byte[] data, SerializationContext context)
+        private static void ConsumeAveragePrice()
         {
-            string s = Encoding.UTF8.GetString(data);
-            return default(T);
-        }
-
-        public void Initialize(SerDesContext context)
-        {
-        }
-
-        public byte[] Serialize(T data, SerializationContext context)
-        {
-            if(data is double d)
+            string bootstrapServers = Environment.GetEnvironmentVariable("BOOTSTRAP_SERVERS");
+            var config = new ProducerConfig()
             {
-                return BitConverter.GetBytes(d);
-            }
+                BootstrapServers = bootstrapServers,
+                AllowAutoCreateTopics = true
+            };
 
-            return default(byte[]);
-        }
+            var consumerConfig = new ConsumerConfig(config);
+            consumerConfig.GroupId = "test-group";
 
-        public byte[] SerializeObject(object data, SerializationContext context)
-        {
-            if (data is double d)
+            CancellationTokenSource cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (_, e) => {
+                e.Cancel = true; // prevent the process from terminating.
+                cts.Cancel();
+            };
+
+            using (var consumer = new ConsumerBuilder<string, byte[]>(consumerConfig).Build())
             {
-                return BitConverter.GetBytes(d);
-            }
+                consumer.Subscribe(TOPIC_AGGREGATED_PRICES);
+                try
+                {
+                    while (true)
+                    {
+                        var cr = consumer.Consume(cts.Token);
+                        string key = cr.Message.Key == null ? "Null" : cr.Message.Key;
+                        double doubleValue = BitConverter.ToDouble(cr.Message.Value);
 
-            return default(byte[]);
+                        Console.WriteLine($"Consumed record with key {key} and value (double) {doubleValue}");
+                        // byte[] bytes = Encoding.UTF8.GetBytes(cr.Message.Value);
+
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    //exception might have occurred since Ctrl-C was pressed.
+                }
+                finally
+                {
+                    // Ensure the consumer leaves the group cleanly and final offsets are committed.
+                    consumer.Close();
+                }
+            }
         }
     }
 }
