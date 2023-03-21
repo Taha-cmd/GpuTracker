@@ -19,7 +19,7 @@ namespace GpuTracker.Producer
         public StreamSerDes(ISchemaRegistryClient schemaRegistryClient)
         {
             this.deserializer = new AsyncSchemaRegistryDeserializer<T>(schemaRegistryClient);
-            this.serializer = new AsyncSchemaRegistrySerializer<T>(schemaRegistryClient);
+            this.serializer = new AsyncSchemaRegistrySerializer<T>(schemaRegistryClient, AutomaticRegistrationBehavior.Always);
         }
         public T Deserialize(byte[] data, SerializationContext context)
         {
