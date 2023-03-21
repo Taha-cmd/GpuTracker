@@ -12,6 +12,7 @@ using Streamiz.Kafka.Net.Crosscutting;
 using Streamiz.Kafka.Net.SerDes;
 using Streamiz.Kafka.Net.State;
 using Streamiz.Kafka.Net.Table;
+using System.Text;
 
 namespace GpuTracker.Producer
 {
@@ -29,8 +30,6 @@ namespace GpuTracker.Producer
                 Url = schemaRegistryUrl
             };
 
-            using var schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig);
-
             string bootstrapServers = Environment.GetEnvironmentVariable("BOOTSTRAP_SERVERS");
             Console.WriteLine("connecting to kafka brokers: " + bootstrapServers);
 
@@ -41,7 +40,7 @@ namespace GpuTracker.Producer
             };
 
             using var producer = new ProducerBuilder<string, Gpu>(config)
-                .SetAvroValueSerializer(schemaRegistry, AutomaticRegistrationBehavior.Always)
+                .SetAvroValueSerializer(schemaRegistryConfig, AutomaticRegistrationBehavior.Always)
                 .Build();
 
             foreach (var gpu in DataGenerator.GetGpus())
@@ -59,8 +58,6 @@ namespace GpuTracker.Producer
 
             producer.Flush();
 
-            var schemaRegistryForStream = new CachedSchemaRegistryClient(schemaRegistryConfig);
-
             // streaming stuff
             var streamConfig = new StreamConfig()
             {
@@ -69,7 +66,7 @@ namespace GpuTracker.Producer
                 AllowAutoCreateTopics = true,
                 AutoRegisterSchemas = true,
                 ApplicationId = "gpu-tracker",
-                DefaultValueSerDes = new StreamSerDes<Gpu>(schemaRegistryForStream),
+                DefaultValueSerDes = new StreamSerDes<Gpu>(schemaRegistryConfig),
                 DefaultKeySerDes = new StringSerDes(),
                 CommitIntervalMs = 100,
                 Guarantee = ProcessingGuarantee.AT_LEAST_ONCE
@@ -89,6 +86,46 @@ namespace GpuTracker.Producer
             var topology = streamBuilder.Build();
             var streams = new KafkaStream(topology, streamConfig);
             await streams.StartAsync();
+        }
+    }
+
+    // for testing serdes
+    public class Implementation<T> : ISerDes<T>
+    {
+        public T Deserialize(byte[] data, SerializationContext context)
+        {
+            string s = Encoding.UTF8.GetString(data);
+            return default(T);
+        }
+
+        public object DeserializeObject(byte[] data, SerializationContext context)
+        {
+            string s = Encoding.UTF8.GetString(data);
+            return default(T);
+        }
+
+        public void Initialize(SerDesContext context)
+        {
+        }
+
+        public byte[] Serialize(T data, SerializationContext context)
+        {
+            if(data is double d)
+            {
+                return BitConverter.GetBytes(d);
+            }
+
+            return default(byte[]);
+        }
+
+        public byte[] SerializeObject(object data, SerializationContext context)
+        {
+            if (data is double d)
+            {
+                return BitConverter.GetBytes(d);
+            }
+
+            return default(byte[]);
         }
     }
 }
