@@ -7,7 +7,7 @@ using Chr.Avro.Confluent; // https://engineering.chrobinson.com/dotnet-avro/guid
 using Confluent.Kafka;
 using Confluent.SchemaRegistry;
 using GpuTracker.Common;
-using GpuTracker.Producer.Models;
+using GpuTracker.Models;
 using Streamiz.Kafka.Net;
 using Streamiz.Kafka.Net.Crosscutting;
 using Streamiz.Kafka.Net.SerDes;
@@ -21,7 +21,16 @@ namespace GpuTracker.Producer
         const string TOPIC_NAME = "Gpus";
         const string TOPIC_AGGREGATED_PRICES = "gpu-average-price";
 
-        public static async Task Main()
+        public static void Main()
+        {
+            ProduceGpus();
+
+            StreamAveragePrice();
+
+            ConsumeAveragePrice();
+        }
+
+        private static async void ProduceGpus()
         {
             string schemaRegistryUrl = Environment.GetEnvironmentVariable("SCHEMA_REGISTRY_URL");
             Console.WriteLine("connecting schema registry: " + schemaRegistryUrl);
@@ -57,6 +66,16 @@ namespace GpuTracker.Producer
             }
 
             producer.Flush();
+        }
+
+        private static async void StreamAveragePrice()
+        {
+            string bootstrapServers = Environment.GetEnvironmentVariable("BOOTSTRAP_SERVERS");
+            string schemaRegistryUrl = Environment.GetEnvironmentVariable("SCHEMA_REGISTRY_URL");
+            var schemaRegistryConfig = new SchemaRegistryConfig()
+            {
+                Url = schemaRegistryUrl
+            };
 
             // streaming stuff
             var streamConfig = new StreamConfig()
@@ -86,8 +105,6 @@ namespace GpuTracker.Producer
             var topology = streamBuilder.Build();
             var streams = new KafkaStream(topology, streamConfig);
             await streams.StartAsync();
-
-            ConsumeAveragePrice();
         }
 
         private static void ConsumeAveragePrice()

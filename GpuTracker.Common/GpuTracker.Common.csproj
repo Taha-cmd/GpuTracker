@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -7,10 +7,15 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="Chr.Avro.Confluent" Version="9.4.1" />
 		<PackageReference Include="Confluent.Kafka" Version="2.0.2" />
 		<PackageReference Include="Confluent.SchemaRegistry" Version="2.0.2" />
 		<PackageReference Include="Streamiz.Kafka.Net" Version="1.4.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\GpuTracker.Models\GpuTracker.Models.csproj" />
 	</ItemGroup>
 
 </Project>

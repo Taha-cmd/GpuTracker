@@ -5,7 +5,6 @@
 
 using Chr.Avro.Confluent; // https://engineering.chrobinson.com/dotnet-avro/guides/kafka/
 using Confluent.Kafka;
-using Confluent.SchemaRegistry;
 using Streamiz.Kafka.Net.SerDes;
 // using this implementation (is used by the producer)
 // https://github.com/ch-robinson/dotnet-avro/blob/main/src/Chr.Avro.Confluent/Confluent/AsyncSchemaRegistryDeserializer.cs
