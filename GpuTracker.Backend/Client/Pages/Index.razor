@@ -1,0 +1,45 @@
+﻿@page "/"
+@using GpuTracker.GpuModels
+@inject HttpClient Http
+
+<PageTitle>GPU Tracker</PageTitle>
+
+@if (dbGpus == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Vendor</th>
+                <th>Buy</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gpu in dbGpus ?? new List<DbGpu>())
+            {
+                <tr>
+                    <td>@gpu.Id</td>
+                    <td>@gpu.Name</td>
+                    <td>@gpu.Price</td>
+                    <td>@gpu.Vendor</td>
+                    <td><a href="@gpu.Url">Buy</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<DbGpu>? dbGpus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dbGpus = await Http.GetFromJsonAsync<List<DbGpu>>("api/gpus");
+    }
+}
