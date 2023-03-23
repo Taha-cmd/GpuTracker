@@ -3,7 +3,10 @@
     using Chr.Avro.Confluent;
     using Confluent.Kafka;
     using Confluent.SchemaRegistry;
+    using GpuTracker.Common;
+    using GpuTracker.Database;
     using GpuTracker.Models;
+    using Newtonsoft.Json;
 
     public class Program
     {
@@ -26,6 +29,11 @@
             var consumerConfig = new ConsumerConfig(config);
             consumerConfig.GroupId = "database-consumer";
 
+
+            string sqliteDatabaseConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? throw new Exception("Could not get Environment Variable 'DATABASE_CONNECTION_STRING'");
+            var dbContext = new GpuTrackerDatabaseContext(sqliteDatabaseConnectionString);
+            IRepository<Gpu, int> repository = new GpuRepository(dbContext);
+
             CancellationTokenSource cts = new CancellationTokenSource();
             Console.CancelKeyPress += (_, e) => {
                 e.Cancel = true; // prevent the process from terminating.
@@ -43,11 +51,10 @@
                     {
                         var cr = consumer.Consume(cts.Token);
                         string key = cr.Message.Key == null ? "Null" : cr.Message.Key;
-                        // double doubleValue = BitConverter.ToDouble(cr.Message.Value);
 
-                        Console.WriteLine($"Consumed record with key {key} and value (double) {cr.Message.Value}");
-                        // byte[] bytes = Encoding.UTF8.GetBytes(cr.Message.Value);
-
+                        Gpu gpu = cr.Message.Value;
+                        repository.Create(gpu);
+                        Console.WriteLine($"Wrote GPU (Kafka Key: {key}) to DB: {JsonConvert.SerializeObject(gpu)}");
                     }
                 }
                 catch (OperationCanceledException)
@@ -60,6 +67,9 @@
                     consumer.Close();
                 }
             }
+
+
+            var allGpus = repository.Get();
         }
 
         private static SchemaRegistryConfig getSchemaRegistryConfig()
