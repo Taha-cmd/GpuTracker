@@ -10,6 +10,20 @@
 }
 else
 {
+    <InputText id="searchQuery" name="searchQuery" @bind-Value="searchQuery"/>
+    <button class="btn btn-primary" @onclick="ClickSearch">Search</button>
+    @if (isSearched)
+    {
+        <button class="btn" @onclick="ClearSearch">Clear Search</button>
+    }
+    <br /><br />
+    @if (isSearched)
+    {
+        <h2>
+            GPUs found for Query "@searchQuery":
+        </h2>
+    }
+
     <table class="table">
         <thead>
             <tr>
@@ -21,14 +35,25 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var gpu in dbGpus ?? new List<DbGpu>())
+            @if(dbGpus.Count > 0)
+            {
+                foreach (var gpu in dbGpus ?? new List<DbGpu>())
+                {
+                    <tr>
+                        <td>@gpu.Id</td>
+                        <td>@gpu.Name</td>
+                        <td>@double.Round(gpu.Price, 2, MidpointRounding.AwayFromZero)</td>
+                        <td>@gpu.Vendor</td>
+                        <td><a href="@gpu.Url">Buy</a></td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>@gpu.Id</td>
-                    <td>@gpu.Name</td>
-                    <td>@gpu.Price</td>
-                    <td>@gpu.Vendor</td>
-                    <td><a href="@gpu.Url">Buy</a></td>
+                    <td colspan="100000">
+                        Could not find Gpus
+                    </td>
                 </tr>
             }
         </tbody>
@@ -36,10 +61,35 @@ else
 }
 
 @code {
+    private string searchQuery = string.Empty;
+    private bool isSearched = false;
     private List<DbGpu>? dbGpus;
 
     protected override async Task OnInitializedAsync()
     {
-        dbGpus = await Http.GetFromJsonAsync<List<DbGpu>>("api/gpus");
+        await this.LoadAllGpus();        
+    }
+
+    private async Task ClickSearch()
+    {
+        if (!string.IsNullOrWhiteSpace(this.searchQuery))
+        {
+            this.isSearched = true;
+            this.dbGpus = null;
+            this.dbGpus = await Http.GetFromJsonAsync<List<DbGpu>>("api/search?query=" + this.searchQuery);
+        }
+    }
+
+    private async Task ClearSearch()
+    {
+        this.isSearched = false;
+        this.searchQuery = string.Empty;
+        await this.LoadAllGpus();
+    }
+
+    private async Task LoadAllGpus()
+    {
+        this.dbGpus = null;
+        this.dbGpus = await Http.GetFromJsonAsync<List<DbGpu>>("api/gpus");
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GpuTracker.GpuModels;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GpuTracker.Database
 {
@@ -43,6 +44,19 @@ namespace GpuTracker.Database
         {
             this.dbContext.Gpu.Update(element);
             this.dbContext.SaveChanges();
+        }
+
+        public List<DbGpu> GetByQuery(string s)
+        {
+            var list = this.dbContext.Gpu
+                       .Where(x => 
+                            x.Name.ToUpper().Contains(s.ToUpper()) ||
+                            x.Vendor.ToUpper().Contains(s.ToUpper()) || 
+                            x.Url.ToUpper().Contains(s.ToUpper()) ||
+                            x.Price.ToString().ToUpper().Contains(s.ToUpper()))
+                       .ToList();
+
+            return list;
         }
     }
 }

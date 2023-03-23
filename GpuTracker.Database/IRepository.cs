@@ -13,5 +13,7 @@
         public T1 Get(T2 id);
 
         public List<T1> Get();
+
+        public List<T1> GetByQuery(string s);
     }
 }
