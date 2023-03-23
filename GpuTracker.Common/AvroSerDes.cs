@@ -10,14 +10,14 @@ using Streamiz.Kafka.Net.SerDes;
 // using this implementation (is used by the producer)
 // https://github.com/ch-robinson/dotnet-avro/blob/main/src/Chr.Avro.Confluent/Confluent/AsyncSchemaRegistryDeserializer.cs
 
-namespace GpuTracker.Producer
+namespace GpuTracker.Common
 {
-    public class StreamSerDes<T> : ISerDes<T>
+    public class AvroSerDes<T> : ISerDes<T>
     {
         private readonly IAsyncDeserializer<T> deserializer;
         private readonly IAsyncSerializer<T> serializer;
         
-        public StreamSerDes(IEnumerable<KeyValuePair<string, string>> schemaRegistryConfig)
+        public AvroSerDes(IEnumerable<KeyValuePair<string, string>> schemaRegistryConfig)
         {
             this.deserializer = new AsyncSchemaRegistryDeserializer<T>(schemaRegistryConfig);
             this.serializer = new AsyncSchemaRegistrySerializer<T>(schemaRegistryConfig, AutomaticRegistrationBehavior.Always);

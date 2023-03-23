@@ -6,14 +6,13 @@
 using Chr.Avro.Confluent; // https://engineering.chrobinson.com/dotnet-avro/guides/kafka/
 using Confluent.Kafka;
 using Confluent.SchemaRegistry;
+using GpuTracker.Common;
 using GpuTracker.Producer.Models;
 using Streamiz.Kafka.Net;
 using Streamiz.Kafka.Net.Crosscutting;
 using Streamiz.Kafka.Net.SerDes;
 using Streamiz.Kafka.Net.State;
 using Streamiz.Kafka.Net.Table;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace GpuTracker.Producer
 {
@@ -67,7 +66,7 @@ namespace GpuTracker.Producer
                 AllowAutoCreateTopics = true,
                 AutoRegisterSchemas = true,
                 ApplicationId = "gpu-tracker",
-                DefaultValueSerDes = new StreamSerDes<Gpu>(schemaRegistryConfig),
+                DefaultValueSerDes = new AvroSerDes<Gpu>(schemaRegistryConfig),
                 DefaultKeySerDes = new StringSerDes(),
                 CommitIntervalMs = 100,
                 Guarantee = ProcessingGuarantee.AT_LEAST_ONCE
