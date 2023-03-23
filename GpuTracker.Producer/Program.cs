@@ -7,7 +7,7 @@ using Chr.Avro.Confluent; // https://engineering.chrobinson.com/dotnet-avro/guid
 using Confluent.Kafka;
 using Confluent.SchemaRegistry;
 using GpuTracker.Common;
-using GpuTracker.Models;
+using GpuTracker.SchemaModels;
 using Streamiz.Kafka.Net;
 using Streamiz.Kafka.Net.Crosscutting;
 using Streamiz.Kafka.Net.SerDes;
@@ -57,7 +57,7 @@ namespace GpuTracker.Producer
                 var message = new Message<string, Gpu>()
                 {
                     Key = gpu.Name,
-                    Value = gpu
+                    Value = GpuMapper.ConvertToSchemaGpu(gpu),
                 };
 
                 Console.WriteLine("sending message: " + message.Value);

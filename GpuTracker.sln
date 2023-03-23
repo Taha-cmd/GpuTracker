@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpuTracker.DatabaseConsumer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpuTracker.Common", "GpuTracker.Common\GpuTracker.Common.csproj", "{27798EFE-F0FB-46DF-8F58-88A5D7289310}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpuTracker.Database", "GpuTracker.Database\GpuTracker.Database.csproj", "{B3D049F7-10E6-49C3-89A3-93BB1DBD816F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{27798EFE-F0FB-46DF-8F58-88A5D7289310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27798EFE-F0FB-46DF-8F58-88A5D7289310}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27798EFE-F0FB-46DF-8F58-88A5D7289310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D049F7-10E6-49C3-89A3-93BB1DBD816F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D049F7-10E6-49C3-89A3-93BB1DBD816F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D049F7-10E6-49C3-89A3-93BB1DBD816F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D049F7-10E6-49C3-89A3-93BB1DBD816F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

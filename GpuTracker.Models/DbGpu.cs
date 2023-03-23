@@ -1,9 +1,8 @@
-using System.ComponentModel;
-
-namespace GpuTracker.Producer.Models
+namespace GpuTracker.GpuModels
 {
-    public class Gpu
+    public class DbGpu
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
         public string Url { get; set; }

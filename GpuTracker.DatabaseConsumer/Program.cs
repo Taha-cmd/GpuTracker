@@ -5,8 +5,9 @@
     using Confluent.SchemaRegistry;
     using GpuTracker.Common;
     using GpuTracker.Database;
-    using GpuTracker.Models;
+    using GpuTracker.SchemaModels;
     using Newtonsoft.Json;
+    using GpuTracker.GpuModels;
 
     public class Program
     {
@@ -32,7 +33,7 @@
 
             string sqliteDatabaseConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? throw new Exception("Could not get Environment Variable 'DATABASE_CONNECTION_STRING'");
             var dbContext = new GpuTrackerDatabaseContext(sqliteDatabaseConnectionString);
-            IRepository<Gpu, int> repository = new GpuRepository(dbContext);
+            IRepository<DbGpu, int> repository = new GpuRepository(dbContext);
 
             CancellationTokenSource cts = new CancellationTokenSource();
             Console.CancelKeyPress += (_, e) => {
@@ -53,7 +54,7 @@
                         string key = cr.Message.Key == null ? "Null" : cr.Message.Key;
 
                         Gpu gpu = cr.Message.Value;
-                        repository.Create(gpu);
+                        repository.Create(GpuMapper.ConvertToDbGpu(gpu));
                         Console.WriteLine($"Wrote GPU (Kafka Key: {key}) to DB: {JsonConvert.SerializeObject(gpu)}");
                     }
                 }

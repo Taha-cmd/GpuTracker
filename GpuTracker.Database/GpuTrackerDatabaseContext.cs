@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using GpuTracker.GpuModels;
 
 namespace GpuTracker.Database
 {
@@ -31,6 +32,6 @@ namespace GpuTracker.Database
             base.OnConfiguring(optionsBuilder);
         }
 
-        public DbSet<GpuTracker.Models.Gpu> Gpu { get; set; } = default!;
+        public DbSet<DbGpu> Gpu { get; set; } = default!;
     }
 }

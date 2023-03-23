@@ -1,8 +1,8 @@
-﻿using GpuTracker.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using GpuTracker.GpuModels;
+
 namespace GpuTracker.Database
 {
-    public class GpuRepository : IRepository<Gpu, int>
+    public class GpuRepository : IRepository<DbGpu, int>
     {
         public IGpuTrackerDbContext dbContext { get; set; }
 
@@ -11,7 +11,7 @@ namespace GpuTracker.Database
             this.dbContext = dbContext;
         }
 
-        public Gpu Create(Gpu element)
+        public DbGpu Create(DbGpu element)
         {
             dbContext.Gpu.Add(element);
             dbContext.SaveChanges();
@@ -26,20 +26,20 @@ namespace GpuTracker.Database
             this.dbContext.SaveChanges();
         }
 
-        public Gpu Get(int id)
+        public DbGpu Get(int id)
         {
             var gpu = dbContext.Gpu.Find(id);
             return gpu;
         }
 
-        public List<Gpu> Get()
+        public List<DbGpu> Get()
         {
             var list = this.dbContext.Gpu.ToList();
 
             return list;
         }
 
-        public void Update(Gpu element)
+        public void Update(DbGpu element)
         {
             this.dbContext.Gpu.Update(element);
             this.dbContext.SaveChanges();

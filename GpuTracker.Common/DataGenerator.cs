@@ -1,13 +1,13 @@
 ﻿using Bogus;
-using GpuTracker.Models;
+using GpuTracker.GpuModels;
 
 namespace GpuTracker.Common
 {
     public class DataGenerator
     {
-        public static IReadOnlyCollection<Gpu> GetGpus()
+        public static IReadOnlyCollection<DbGpu> GetGpus()
         {
-            var faker = new Faker<Gpu>()
+            var faker = new Faker<DbGpu>()
                 .RuleFor(gpu => gpu.Name, faker => faker.PickRandom("Rtx 3060", "Rtx 3070", "Rtx 3080"))
                 .RuleFor(gpu => gpu.Vendor, faker => faker.PickRandom("Media Markt", "Amazon"))
                 .RuleFor(gpu => gpu.Price, faker => faker.Random.Double(500, 2000))
