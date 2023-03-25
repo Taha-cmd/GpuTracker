@@ -11,7 +11,8 @@ namespace GpuTracker.Backend
             var builder = WebApplication.CreateBuilder(args);
 
             // todo: replace datasource with app setting.
-            builder.Services.AddSingleton<IGpuTrackerDbContext>((m) => new GpuTrackerDatabaseContext("Data Source=../../GpuTracker.db"));
+            string sqliteDatabaseConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? throw new Exception("Could not get Environment Variable 'DATABASE_CONNECTION_STRING'");
+            builder.Services.AddSingleton<IGpuTrackerDbContext>((m) => new GpuTrackerDatabaseContext(sqliteDatabaseConnectionString));
             builder.Services.AddSingleton<IRepository<DbGpu, int>, GpuRepository>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
