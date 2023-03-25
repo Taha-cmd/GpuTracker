@@ -1,3 +1,6 @@
+pvName: sqlite
+pvcName: sqlite
+
 kafka:
   # https://artifacthub.io/packages/helm/bitnami/kafka
 

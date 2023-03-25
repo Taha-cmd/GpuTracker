@@ -1,0 +1,13 @@
+# how can pods share a volume: https://stackoverflow.com/a/52564314
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.pvcName }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: {{ .Values.pvName }}
+  resources:
+    requests:
+      storage: 1Gi
