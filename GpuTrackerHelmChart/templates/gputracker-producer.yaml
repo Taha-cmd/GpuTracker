@@ -15,10 +15,12 @@ spec:
           restartPolicy: Never
           containers:
             - name: {{$name}}
-              image: se22m001/gputracker-producer
-              imagePullPolicy: Always
+              image: {{.Values.image.registry}}/gpu-tracker-producer
+              imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
               env:
                 - name: BOOTSTRAP_SERVERS
                   value: {{.Release.Name}}-kafka:9092
                 - name: SCHEMA_REGISTRY_URL
                   value: http://kafka-schema-registry:8081
+                - name: TOPIC_NAME
+                  value: {{ .Values.topicName }}

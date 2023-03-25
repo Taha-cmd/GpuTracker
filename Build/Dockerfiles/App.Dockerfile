@@ -7,11 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["GpuTracker.Backend/Server/GpuTracker.Backend.Server.csproj", "GpuTracker.Backend/Server/"]
-COPY ["GpuTracker.Database/GpuTracker.Database.csproj", "GpuTracker.Database/"]
-COPY ["GpuTracker.Models/GpuTracker.Models.csproj", "GpuTracker.Models/"]
-COPY ["GpuTracker.Backend/Client/GpuTracker.Backend.Client.csproj", "GpuTracker.Backend/Client/"]
-RUN dotnet restore "GpuTracker.Backend/Server/GpuTracker.Backend.Server.csproj"
+COPY GpuTracker.Backend/Server/GpuTracker.Backend.Server.csproj GpuTracker.Backend/Server/
+COPY GpuTracker.Database/GpuTracker.Database.csproj GpuTracker.Database/
+COPY GpuTracker.Models/GpuTracker.Models.csproj GpuTracker.Models/
+COPY GpuTracker.Backend/Client/GpuTracker.Backend.Client.csproj GpuTracker.Backend/Client/
+RUN dotnet restore GpuTracker.Backend/Server/GpuTracker.Backend.Server.csproj
 COPY . .
 WORKDIR "/src/GpuTracker.Backend/Server"
 RUN dotnet build "GpuTracker.Backend.Server.csproj" -c Release -o /app/build

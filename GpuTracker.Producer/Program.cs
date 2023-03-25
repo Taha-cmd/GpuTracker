@@ -18,19 +18,19 @@ namespace GpuTracker.Producer
 {
     public class Program
     {
-        const string TOPIC_NAME = "Gpus";
+        private static string TOPIC_NAME = Environment.GetEnvironmentVariable("TOPIC_NAME") ?? throw new InvalidOperationException();
         const string TOPIC_AGGREGATED_PRICES = "gpu-average-price";
 
-        public static void Main()
+        public static async Task Main()
         {
-            ProduceGpus();
+            await ProduceGpus();
 
             StreamAveragePrice();
 
             ConsumeAveragePrice();
         }
 
-        private static async void ProduceGpus()
+        private static async Task ProduceGpus()
         {
             string schemaRegistryUrl = Environment.GetEnvironmentVariable("SCHEMA_REGISTRY_URL");
             Console.WriteLine("connecting schema registry: " + schemaRegistryUrl);

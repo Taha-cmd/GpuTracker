@@ -1,5 +1,9 @@
 pvName: sqlite
 pvcName: sqlite
+topicName: Gpus
+
+image:
+  registry: docker.io/se22m001
 
 kafka:
   # https://artifacthub.io/packages/helm/bitnami/kafka
@@ -18,10 +22,10 @@ kafka:
 
   provisioning:
     enabled: true
-    replicationFactor: 1
-    numPartitions: 1
+    replicationFactor: 3
+    numPartitions: 3
     topics:
-      - name: "Gpus" # https://stackoverflow.com/a/72628337
+      - name: Gpus # https://stackoverflow.com/a/72628337
     
   # https://github.com/bitnami/charts/tree/main/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
   # externalAccess:

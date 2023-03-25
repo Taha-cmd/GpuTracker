@@ -22,8 +22,8 @@ spec:
           claimName: {{ .Values.pvcName }}
       containers:
       - name: {{$name}}
-        image: se22m001/gputracker-app
-        imagePullPolicy: Always
+        image: {{.Values.image.registry}}/gpu-tracker-app
+        imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
         ports:
         - containerPort: 80
         - containerPort: 443
@@ -39,6 +39,7 @@ kind: Service
 metadata:
   name: {{$name}}
 spec:
+  type: LoadBalancer
   selector:
     app: {{$name}}
   ports:

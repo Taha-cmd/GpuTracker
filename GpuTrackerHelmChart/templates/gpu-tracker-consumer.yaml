@@ -22,8 +22,8 @@ spec:
           claimName: {{ .Values.pvcName }}
       containers:
       - name: {{$name}}
-        image: se22m001/gputracker-consumer
-        imagePullPolicy: IfNotPresent
+        image: {{.Values.image.registry}}/gpu-tracker-consumer
+        imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
         volumeMounts:
         - name: data
           mountPath: /data
@@ -34,4 +34,6 @@ spec:
           value: http://kafka-schema-registry:8081
         - name: DATABASE_CONNECTION_STRING
           value: "Data Source=/data/GpuTracker.db"
+        - name: TOPIC_NAME
+          value: {{ .Values.topicName }}
                 

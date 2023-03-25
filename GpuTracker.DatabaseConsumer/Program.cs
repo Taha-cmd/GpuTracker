@@ -11,7 +11,8 @@
 
     public class Program
     {
-        const string TOPIC_NAME = "Gpus";
+        private static string TOPIC_NAME =
+            Environment.GetEnvironmentVariable("TOPIC_NAME") ?? throw new InvalidOperationException();
 
         static void Main(string[] args)
         {
