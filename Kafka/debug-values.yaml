@@ -1,0 +1,9 @@
+kafka:
+  replicaCount: 1
+  defaultReplicationFactor: 1
+  offsetsTopicReplicationFactor: 1
+
+  externalAccess:
+    enabled: true
+    autoDiscovery:
+      enabled: true

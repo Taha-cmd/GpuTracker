@@ -16,6 +16,7 @@ namespace GpuTracker.Backend
             builder.Services.AddSingleton<IRepository<DbGpu, int>, GpuRepository>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+            builder.Services.AddControllers();
 
             var app = builder.Build();
 

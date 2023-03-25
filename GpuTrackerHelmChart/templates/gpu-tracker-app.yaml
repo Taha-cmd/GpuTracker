@@ -1,0 +1,53 @@
+{{$name := "gpu-tracker-app"}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{$name}}
+  labels:
+    app: {{$name}}
+spec:
+  selector:
+    matchLabels:
+      app: {{$name}}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{$name}}
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.pvcName }}
+      containers:
+      - name: {{$name}}
+        image: se22m001/gputracker-app
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        env:
+        - name: DATABASE_CONNECTION_STRING
+          value: "Data Source=/data/GpuTracker.db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{$name}}
+spec:
+  selector:
+    app: {{$name}}
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+                
