@@ -5,9 +5,9 @@
     using Confluent.SchemaRegistry;
     using GpuTracker.Common;
     using GpuTracker.Database;
+    using GpuTracker.GpuModels;
     using GpuTracker.SchemaModels;
     using Newtonsoft.Json;
-    using GpuTracker.GpuModels;
 
     public class Program
     {

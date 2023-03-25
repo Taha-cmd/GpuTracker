@@ -7,6 +7,9 @@
         "BOOTSTRAP_SERVERS": "localhost:9094",
         "DATABASE_CONNECTION_STRING": "Data Source=../../../../GpuTracker.db"
       }
+    },
+    "Docker": {
+      "commandName": "Docker"
     }
   }
 }
