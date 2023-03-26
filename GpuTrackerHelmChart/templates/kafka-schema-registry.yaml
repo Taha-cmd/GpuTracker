@@ -1,47 +1,45 @@
-{{$name := "kafka-schema-registry"}}
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{$name}}
+  name: {{ .Values.schemaRegistry.hostname }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    app: {{$name}}
+    app: {{ .Values.schemaRegistry.hostname }}
 spec:
   selector:
     matchLabels:
-      app: {{$name}}
+      app: {{ .Values.schemaRegistry.hostname }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{$name}}
+        app: {{ .Values.schemaRegistry.hostname }}
     spec:
       containers:
-      - name: {{$name}}
+      - name: {{ .Values.schemaRegistry.hostname }}
         image: confluentinc/cp-schema-registry
         imagePullPolicy: IfNotPresent
         ports:
-            - containerPort: 8081
+            - containerPort: {{ .Values.schemaRegistry.port }}
             # config value tranformation system: https://docs.confluent.io/platform/current/installation/docker/config-reference.html#docker-configuration-parameters-for-cp
             # configuration options: https://docs.confluent.io/platform/current/schema-registry/installation/config.html#schema-canonicalize-on-consume
         env:
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
               value: {{.Release.Name}}-kafka:9092
             - name: SCHEMA_REGISTRY_HOST_NAME
-              value: {{$name}}
+              value: {{ .Values.schemaRegistry.hostname }}
             - name: SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL # https://docs.confluent.io/platform/current/schema-registry/installation/config.html#schema-compatibility-level
               value: full
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{$name}}
+  name: {{ .Values.schemaRegistry.hostname }}
 spec:
+  type: LoadBalancer
   selector:
-    app: {{$name}}
+    app: {{ .Values.schemaRegistry.hostname }}
   ports:
     - protocol: TCP
-      port: 8081
-      targetPort: 8081
+      port: {{ .Values.schemaRegistry.port }}
+      targetPort: {{ .Values.schemaRegistry.port }}
             

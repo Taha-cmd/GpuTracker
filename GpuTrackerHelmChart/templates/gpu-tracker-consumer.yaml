@@ -19,10 +19,10 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.pvcName }}
+          claimName: {{ .Values.app.database.pvcName }}
       containers:
       - name: {{$name}}
-        image: {{.Values.image.registry}}/gpu-tracker-consumer
+        image: {{.Values.app.image.registry}}/gpu-tracker-consumer
         imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
         volumeMounts:
         - name: data
@@ -31,9 +31,9 @@ spec:
         - name: BOOTSTRAP_SERVERS
           value: {{.Release.Name}}-kafka:9092
         - name: SCHEMA_REGISTRY_URL
-          value: http://kafka-schema-registry:8081
+          value: http://{{ .Values.schemaRegistry.hostname }}:{{ .Values.schemaRegistry.port }}
         - name: DATABASE_CONNECTION_STRING
-          value: "Data Source=/data/GpuTracker.db"
+          value: {{ .Values.app.database.sqliteConnectionString }}
         - name: TOPIC_NAME
           value: {{ .Values.topicName }}
                 

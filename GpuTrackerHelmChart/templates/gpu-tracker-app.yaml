@@ -19,10 +19,10 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.pvcName }}
+          claimName: {{ .Values.app.database.pvcName }}
       containers:
       - name: {{$name}}
-        image: {{.Values.image.registry}}/gpu-tracker-app
+        image: {{.Values.app.image.registry}}/gpu-tracker-app
         imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
         ports:
         - containerPort: 80
@@ -32,7 +32,7 @@ spec:
           mountPath: /data
         env:
         - name: DATABASE_CONNECTION_STRING
-          value: "Data Source=/data/GpuTracker.db"
+          value: {{ .Values.app.database.sqliteConnectionString }}
 ---
 apiVersion: v1
 kind: Service

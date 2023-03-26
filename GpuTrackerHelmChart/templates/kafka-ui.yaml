@@ -1,45 +1,43 @@
-{{$name := "kafka-ui"}}
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{$name}}
+  name: {{ .Values.kafkaUi.hostname }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    app: {{$name}}
+    app: {{ .Values.kafkaUi.hostname }}
 spec:
   selector:
     matchLabels:
-      app: {{$name}}
+      app: {{ .Values.kafkaUi.hostname }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{$name}}
+        app: {{ .Values.kafkaUi.hostname }}
     spec:
       containers:
-      - name: {{$name}}
+      - name: {{ .Values.kafkaUi.hostname }}
         image: provectuslabs/kafka-ui
         imagePullPolicy: IfNotPresent
         ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.kafkaUi.port }}
         env:
             - name: KAFKA_CLUSTERS_0_NAME
-              value: gpu-tracker
+              value: {{.Release.Name}}
             - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
               value: {{.Release.Name}}-kafka:9092
             - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY	
-              value: http://kafka-schema-registry:8081
+              value: http://{{.Values.schemaRegistry.hostname}}:{{.Values.schemaRegistry.port}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{$name}}
+  name: {{ .Values.kafkaUi.hostname }}
 spec:
+  type: LoadBalancer
   selector:
-    app: {{$name}}
+    app: {{ .Values.kafkaUi.hostname }}
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: {{ .Values.kafkaUi.port }}
+      targetPort: {{ .Values.kafkaUi.port }}
             

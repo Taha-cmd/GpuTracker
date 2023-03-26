@@ -3,11 +3,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ .Values.pvcName }}
+  name: {{ .Values.app.database.pvcName }}
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: {{ .Values.pvName }}
+  storageClassName: {{ .Values.app.database.pvName }}
   resources:
     requests:
       storage: 1Gi
