@@ -1,0 +1,41 @@
+{{$name := .Values.smtp.host}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{$name}}
+  labels:
+    app: {{$name}}
+spec:
+  selector:
+    matchLabels:
+      app: {{$name}}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{$name}}
+    spec:
+      containers:
+      - name: {{$name}}
+        image: namshi/smtp
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 25
+        env:
+        - name: MAILNAME
+          value: {{ .Values.smtp.hostname }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{$name}}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{$name}}
+  ports:
+    - name: smtp
+      protocol: TCP
+      port: 25
+      targetPort: 25

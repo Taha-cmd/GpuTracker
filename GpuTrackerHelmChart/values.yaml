@@ -8,6 +8,11 @@ app:
   image:
     registry: docker.io/se22m001
 
+smtp:
+  hostname: gpu.tracker.com # used by the smtp server to identify itself
+  host: smtp-server # used by the application (= like a connection string)
+  senderAddress: noreply@gpu.tracker.com
+
 kafkaUi:
   hostname: kafka-ui
   port: 8080

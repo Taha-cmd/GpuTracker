@@ -33,6 +33,10 @@ spec:
         env:
         - name: DATABASE_CONNECTION_STRING
           value: {{ .Values.app.database.sqliteConnectionString }}
+        - name: SMTP_SERVER
+          value: {{ .Values.smtp.host }}
+        - name: SMTP_FROM
+          value: {{ .Values.smtp.senderAddress }}
 ---
 apiVersion: v1
 kind: Service
