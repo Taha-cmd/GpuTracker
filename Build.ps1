@@ -7,13 +7,13 @@ $private:version = Get-Content "$PSScriptRoot/_version.txt"
 
 # map component name to tag
 $private:dockerImages = @{
-    App      = "$tagPrefix-app:$version"
-    Consumer = "$tagPrefix-consumer:$version"
-    Producer = "$tagPrefix-producer:$version"
+    App      = "$tagPrefix-app"
+    Consumer = "$tagPrefix-consumer"
+    Producer = "$tagPrefix-producer"
 }
 
 # build the images in parallel to save time
 $dockerImages.keys | ForEach-Object -Parallel {
     $tags = $Using:dockerImages # Using is required to capture variables from the outer scope in -Parallel foreach
-    & Build/Build-DockerImage -Component $_ -Tag $tags[$_]
+    & Build/Build-DockerImage -Component $_ -Tag $tags[$_] -Version $Using:version
 }

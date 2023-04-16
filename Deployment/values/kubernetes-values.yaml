@@ -1,5 +1,7 @@
 app:
   replicas: 2
+  image:
+    version: 1.0.0
 
 kafka:
   replicaCount: 4
