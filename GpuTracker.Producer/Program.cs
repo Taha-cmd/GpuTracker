@@ -25,9 +25,11 @@ namespace GpuTracker.Producer
         {
             await ProduceGpus();
 
-            StreamAveragePrice();
+            // not working
+            // StreamAveragePrice();
 
-            ConsumeAveragePrice();
+            // for testing / debugging only
+            // ConsumeAveragePrice();
         }
 
         private static async Task ProduceGpus()
@@ -120,7 +122,8 @@ namespace GpuTracker.Producer
             consumerConfig.GroupId = "test-group";
 
             CancellationTokenSource cts = new CancellationTokenSource();
-            Console.CancelKeyPress += (_, e) => {
+            Console.CancelKeyPress += (_, e) =>
+            {
                 e.Cancel = true; // prevent the process from terminating.
                 cts.Cancel();
             };
