@@ -17,10 +17,6 @@ spec:
             - name: {{$name}}
               image: {{.Values.app.image.registry}}/gpu-tracker-producer
               imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
-              env:
-                - name: BOOTSTRAP_SERVERS
-                  value: {{.Release.Name}}-kafka:9092
-                - name: SCHEMA_REGISTRY_URL
-                  value: http://{{ .Values.schemaRegistry.hostname }}:{{ .Values.schemaRegistry.port }}
-                - name: TOPIC_NAME
-                  value: {{ .Values.topicName }}
+              envFrom:
+              - configMapRef:
+                  name: kafka-configmap

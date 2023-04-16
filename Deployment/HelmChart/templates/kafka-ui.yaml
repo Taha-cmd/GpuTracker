@@ -20,13 +20,9 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
             - containerPort: {{ .Values.kafkaUi.port }}
-        env:
-            - name: KAFKA_CLUSTERS_0_NAME
-              value: {{.Release.Name}}
-            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-              value: {{.Release.Name}}-kafka:9092
-            - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY	
-              value: http://{{.Values.schemaRegistry.hostname}}:{{.Values.schemaRegistry.port}}
+        envFrom:
+          - configMapRef:
+              name: kafka-configmap
 ---
 apiVersion: v1
 kind: Service

@@ -1,0 +1,24 @@
+{{ $bootstrapServer := printf "%s-%s" .Release.Name "kafka:9092" }}
+{{ $schemaRegistryUrl := printf "http://%s:%s" .Values.schemaRegistry.hostname (.Values.schemaRegistry.port | toString) }}
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kafka-configmap
+data:
+  # kafka stuff injected into the application
+  BOOTSTRAP_SERVERS: {{ $bootstrapServer }}
+  SCHEMA_REGISTRY_URL: {{ $schemaRegistryUrl }}
+  TOPIC_NAME: {{ .Values.topicName }}
+  
+  # schema registry vars
+  # config value tranformation system: https://docs.confluent.io/platform/current/installation/docker/config-reference.html#docker-configuration-parameters-for-cp
+  # configuration options: https://docs.confluent.io/platform/current/schema-registry/installation/config.html#schema-canonicalize-on-consume
+  SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: {{ $bootstrapServer }}
+  SCHEMA_REGISTRY_HOST_NAME: {{ .Values.schemaRegistry.hostname }}
+  SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL: full # https://docs.confluent.io/platform/current/schema-registry/installation/config.html#schema-compatibility-level
+
+  # kafka ui
+  KAFKA_CLUSTERS_0_NAME: {{.Release.Name}}
+  KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: {{ $bootstrapServer }}
+  KAFKA_CLUSTERS_0_SCHEMAREGISTRY: {{ $schemaRegistryUrl }}
