@@ -1,6 +1,7 @@
 topicName: Gpus
 
 app:
+  replicas: 1
   database:
     sqliteConnectionString: "Data Source=/data/GpuTracker.db"
     pvName: sqlite

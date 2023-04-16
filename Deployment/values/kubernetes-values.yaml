@@ -1,2 +1,5 @@
+app:
+  replicas: 2
+
 kafka:
   replicaCount: 4
