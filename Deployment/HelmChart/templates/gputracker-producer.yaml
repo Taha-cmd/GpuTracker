@@ -16,7 +16,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: {{$name}}
-              image: {{.Values.app.image.registry}}/gpu-tracker-producer
+              image: {{.Values.app.image.registry}}/gpu-tracker-producer:{{.Values.app.image.version}}
               imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
               envFrom:
               - configMapRef:

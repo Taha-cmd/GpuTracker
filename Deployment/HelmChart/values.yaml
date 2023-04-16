@@ -8,6 +8,7 @@ app:
     pvcName: sqlite
   image:
     registry: docker.io/se22m001
+    version: latest
 
 smtp:
   hostname: gpu.tracker.com # used by the smtp server to identify itself

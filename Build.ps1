@@ -1,10 +1,15 @@
 #Requires -Version 7.2
 
+$private:tagPrefix = "gpu-tracker" 
+
+# for simplicity, we use the same version for all three components
+$private:version = Get-Content "$PSScriptRoot/_version.txt"
+
 # map component name to tag
 $private:dockerImages = @{
-    App      = "gpu-tracker-app"
-    Consumer = "gpu-tracker-consumer"
-    Producer = "gpu-tracker-producer"
+    App      = "$tagPrefix-app:$version"
+    Consumer = "$tagPrefix-consumer:$version"
+    Producer = "$tagPrefix-producer:$version"
 }
 
 # build the images in parallel to save time

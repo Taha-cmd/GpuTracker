@@ -22,7 +22,7 @@ spec:
           claimName: {{ .Values.app.database.pvcName }}
       containers:
       - name: {{$name}}
-        image: {{.Values.app.image.registry}}/gpu-tracker-consumer
+        image: {{.Values.app.image.registry}}/gpu-tracker-consumer:{{.Values.app.image.version}}
         imagePullPolicy: Always # always pull image since we are not tagging our images and therefore kubernetes will assume that it already has the latest one
         volumeMounts:
         - name: data
