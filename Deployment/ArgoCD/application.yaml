@@ -1,0 +1,26 @@
+# https://argo-cd.readthedocs.io/en/stable/user-guide/helm/
+# see sample https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/application.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gpu-tracker
+  namespace: argocd # application must be in the same namespace as argocd! see https://stackoverflow.com/questions/69787413/application-not-showing-in-argocd-when-applying-yaml
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Taha-cmd/GpuTracker
+    path: Deployment/HelmChart # argocd will watch this directory for changes. it will detect that it is a helm chart based on the Chart.yaml
+    targetRevision: main # sync main branch
+    helm:
+      valueFiles:
+        - ../values/kubernetes-values.yaml # path is relative to the path property specified above
+  destination:
+    server: "https://kubernetes.default.svc" # local cluster
+    namespace: gpu-tracker
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
